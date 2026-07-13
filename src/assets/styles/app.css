@@ -1,0 +1,66 @@
+/* Personal editorial palette */
+:root {
+  --primary: 24 32% 45%;
+  --foreground: 30 15% 11%;
+  --muted-foreground: 28 7% 39%;
+  --background: 38 36% 98%;
+  --muted: 35 24% 94%;
+  --card: 34 18% 89%;
+  --border: 32 15% 84%;
+  --input: 32 15% 88%;
+  --ring: 24 32% 45%;
+  --radius: 0.75rem;
+}
+
+.dark {
+  --primary: 31 43% 72%;
+  --foreground: 40 22% 94%;
+  --muted-foreground: 32 10% 67%;
+  --background: 28 13% 8%;
+  --muted: 28 12% 14%;
+  --card: 28 10% 20%;
+  --border: 28 9% 24%;
+  --input: 28 9% 18%;
+  --ring: 31 43% 72%;
+}
+
+:root {
+  --un-default-border-color: hsl(var(--border) / 1);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+html.dark {
+  color-scheme: dark;
+}
+
+body {
+  background-image:
+    linear-gradient(hsl(var(--border) / 0.2) 1px, transparent 1px),
+    linear-gradient(90deg, hsl(var(--border) / 0.2) 1px, transparent 1px);
+  background-size: 32px 32px;
+  background-attachment: fixed;
+}
+
+body::before {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background: hsl(var(--background) / 0.93);
+  content: '';
+}
+
+a {
+  transition: color 0.2s ease;
+}
+
+a:hover {
+  color: hsl(var(--primary) / var(--un-text-opacity, 1));
+}
+
+::selection {
+  color: hsl(var(--foreground));
+  background: hsl(var(--primary) / 0.22);
+}

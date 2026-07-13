@@ -1,0 +1,30 @@
+---
+import { Button } from 'astro-pure/user'
+import { cn } from 'astro-pure/utils'
+import PageLayout from '@/layouts/BaseLayout.astro'
+import { integ } from '@/site-config'
+
+import DocsContents from '@/components/DocsContents.astro'
+
+const meta = {
+  title: '文档',
+  description: '按主题整理的入门文档、写作说明与资源使用方法。'
+}
+---
+
+<PageLayout {meta}>
+  <Button title='返回首页' href='/' variant='back' />
+  <main class='mt-6 lg:mt-10'>
+    <div id='content-header' class='animate'>
+      <p class='mb-3 text-sm tracking-widest text-muted-foreground'>KNOWLEDGE BASE</p>
+      <h1 class='mb-4 text-3xl font-medium'>文档</h1>
+      <p class='max-w-2xl leading-relaxed text-muted-foreground'>
+        从快速开始到内容维护，这里存放结构化、可以反复查阅的资料。
+      </p>
+    </div>
+
+    <div id='content' class={cn('animate mt-10 max-w-none md:min-w-[45ch]', integ.typography.class)}>
+      <DocsContents title={false} />
+    </div>
+  </main>
+</PageLayout>

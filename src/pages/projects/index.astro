@@ -1,0 +1,39 @@
+---
+import PageLayout from '@/layouts/CommonPage.astro'
+import ProjectSection from '@/components/projects/ProjectSection.astro'
+
+const headings = [
+  { depth: 2, slug: 'current', text: '当前项目' },
+  { depth: 2, slug: 'future', text: '后续计划' }
+]
+---
+
+<PageLayout title='项目' {headings}>
+  <p>
+    这里收录我正在维护的项目、公开仓库与阶段性成果。内容会随着实践持续补充。
+  </p>
+
+  <h2 id='current'>当前项目</h2>
+  <ProjectSection
+    projects={[
+      {
+        name: 'Zane 的个人博客',
+        description: '用于沉淀文章、文档和项目记录的个人网站。',
+        links: [
+          { type: 'github', href: 'https://github.com/zane0454/zane.github.io' },
+          { type: 'site', href: 'https://zane0454.github.io/' }
+        ]
+      },
+      {
+        name: 'GitHub 主页',
+        description: '查看我的公开仓库与最新活动。',
+        links: [{ type: 'github', href: 'https://github.com/zane0454' }]
+      }
+    ]}
+  />
+
+  <h2 id='future'>后续计划</h2>
+  <p>
+    新项目会在具备稳定说明、可复现结果或持续维护价值之后加入这里。
+  </p>
+</PageLayout>

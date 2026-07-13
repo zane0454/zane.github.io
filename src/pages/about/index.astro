@@ -1,0 +1,42 @@
+---
+import { Button, Icon } from 'astro-pure/user'
+import PageLayout from '@/layouts/CommonPage.astro'
+
+const headings = [
+  { depth: 2, slug: 'about-me', text: '关于我' },
+  { depth: 2, slug: 'writing', text: '在这里写什么' },
+  { depth: 2, slug: 'contact', text: '联系我' },
+  { depth: 2, slug: 'about-site', text: '关于本站' }
+]
+---
+
+<PageLayout title='关于' {headings}>
+  <p>你好，我是 Zane。</p>
+  <p>
+    这里是我的个人博客，也是一个持续生长的知识空间。我会把学习过程、解决问题的方法、项目经验和日常思考整理在这里。
+  </p>
+
+  <h2 id='about-me'>关于我</h2>
+  <p>
+    我喜欢研究新事物，也享受把零散信息整理成清晰结构的过程。相比追求更新速度，我更在意内容是否准确、是否容易理解、以后还能不能继续使用。
+  </p>
+
+  <h2 id='writing'>在这里写什么</h2>
+  <ul>
+    <li>完整的入门文档与实践教程</li>
+    <li>阅读、学习和项目过程中的阶段性笔记</li>
+    <li>工具、方法与工作流程的整理</li>
+    <li>偶尔记录生活、兴趣和长期思考</li>
+  </ul>
+
+  <h2 id='contact'>联系我</h2>
+  <p>如果你想讨论文章内容或交流项目，可以通过 GitHub 联系我。</p>
+  <Button title='访问 GitHub' class='w-fit' href='https://github.com/zane0454' target='_blank'>
+    <Icon class='size-5' name='github' slot='before' />
+  </Button>
+
+  <h2 id='about-site'>关于本站</h2>
+  <p>
+    本站使用 Astro 与 Pure 主题构建。内容以 Markdown 保存，支持图片、附件、代码块和数学公式，并通过 GitHub Pages 自动发布。
+  </p>
+</PageLayout>

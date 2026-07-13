@@ -1,0 +1,173 @@
+---
+import { Image } from 'astro:assets'
+
+import { PostPreview } from 'astro-pure/components/pages'
+import { getBlogCollection, sortMDByDate } from 'astro-pure/server'
+import { Button, Icon, Label } from 'astro-pure/user'
+import PageLayout from '@/layouts/BaseLayout.astro'
+import Section from '@/components/home/Section.astro'
+import config from '@/site-config'
+
+const posts = sortMDByDate(await getBlogCollection()).slice(0, 6)
+const imagePath = config.logo.src
+const images = import.meta.glob<{ default: ImageMetadata }>(
+  '/src/assets/*.{jpeg,jpg,png,gif,avif,webp}'
+)
+if (!images[imagePath]) throw new Error(`找不到头像资源：${imagePath}`)
+---
+
+<PageLayout meta={{ title: '首页' }} highlightColor='#b98a64'>
+  <main class='flex w-full flex-col items-center'>
+    <section class='animate hero-card mb-12 flex w-full flex-col items-center gap-y-7' id='content-header'>
+      <Image
+        src={images[imagePath]()}
+        alt={config.logo.alt || 'Zane'}
+        class='avatar h-28 w-28 rounded-full object-cover p-1'
+        loading='eager'
+        fetchpriority='high'
+      />
+
+      <div class='flex flex-col items-center gap-y-3 text-center'>
+        <p class='eyebrow'>PERSONAL NOTES · SINCE 2026</p>
+        <h1 class='text-4xl font-medium sm:text-5xl'>{config.author}</h1>
+        <p class='max-w-2xl text-lg leading-relaxed text-muted-foreground'>
+          记录学习、思考与生活，也分享那些值得慢慢读、长期保存的内容。
+        </p>
+        <div class='mt-1 flex flex-wrap justify-center gap-x-6 gap-y-3'>
+          <Label title='持续记录，保持好奇'>
+            <Icon name='document' class='size-5' slot='icon' />
+          </Label>
+          <Label
+            title='GitHub'
+            as='a'
+            href='https://github.com/zane0454'
+            target='_blank'
+          >
+            <Icon name='github' class='size-5' slot='icon' />
+          </Label>
+        </div>
+      </div>
+
+      <div class='flex flex-wrap justify-center gap-3'>
+        <Button title='开始阅读' href='/blog' variant='ahead' />
+        <Button title='浏览文档' href='/docs' />
+      </div>
+    </section>
+
+    <div id='content' class='animate flex w-full flex-col gap-y-12 md:w-4/5 lg:w-5/6'>
+      <Section title='关于'>
+        <p class='text-muted-foreground leading-relaxed'>
+          这里是 Zane 的个人空间。文章以清晰、诚实和可复用为原则，既有完整教程，也有简短记录。
+          希望每次整理都能让复杂的事情变得更容易理解。
+        </p>
+        <Button title='了解更多' class='w-fit self-end' href='/about' variant='ahead' />
+      </Section>
+
+      {
+        posts.length > 0 && (
+          <Section title='最近文章'>
+            <ul class='flex flex-col gap-y-2'>
+              {posts.map((post) => (
+                <li class='flex flex-col gap-x-2 sm:flex-row'>
+                  <PostPreview post={post} />
+                </li>
+              ))}
+            </ul>
+            <Button title='查看全部文章' class='w-fit self-end' href='/blog' variant='ahead' />
+          </Section>
+        )
+      }
+
+      <Section title='探索'>
+        <div class='explore-grid grid grid-cols-1 gap-3 sm:grid-cols-3'>
+          <a class='explore-card' href='/blog'>
+            <span class='explore-index'>01</span>
+            <h3>文章</h3>
+            <p>学习记录、经验总结与长篇思考。</p>
+          </a>
+          <a class='explore-card' href='/docs'>
+            <span class='explore-index'>02</span>
+            <h3>文档</h3>
+            <p>按主题整理的入门资料与使用说明。</p>
+          </a>
+          <a class='explore-card' href='/projects'>
+            <span class='explore-index'>03</span>
+            <h3>项目</h3>
+            <p>正在做、做过以及准备继续完善的事情。</p>
+          </a>
+        </div>
+      </Section>
+    </div>
+  </main>
+</PageLayout>
+
+<style>
+  .hero-card {
+    position: relative;
+    padding: 3.5rem 1.5rem 2.75rem;
+  }
+
+  .hero-card::before {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border: 1px solid hsl(var(--border) / 0.8);
+    border-radius: 2rem;
+    background:
+      radial-gradient(circle at 18% 8%, hsl(var(--primary) / 0.12), transparent 32%),
+      linear-gradient(135deg, hsl(var(--background) / 0.92), hsl(var(--muted) / 0.72));
+    content: '';
+  }
+
+  .avatar {
+    border: 1px solid hsl(var(--border));
+    background: hsl(var(--background));
+    box-shadow: 0 12px 34px hsl(var(--foreground) / 0.1);
+  }
+
+  .eyebrow {
+    color: hsl(var(--muted-foreground));
+    font-size: 0.7rem;
+    letter-spacing: 0.18em;
+  }
+
+  .explore-card {
+    display: flex;
+    min-height: 11rem;
+    flex-direction: column;
+    justify-content: flex-end;
+    gap: 0.45rem;
+    border: 1px solid hsl(var(--border));
+    border-radius: 1.25rem;
+    padding: 1.25rem;
+    background: hsl(var(--muted) / 0.55);
+    transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
+  }
+
+  .explore-card:hover {
+    transform: translateY(-3px);
+    border-color: hsl(var(--primary) / 0.55);
+    box-shadow: 0 14px 32px hsl(var(--foreground) / 0.08);
+  }
+
+  .explore-card h3 {
+    font-size: 1.15rem;
+    font-weight: 500;
+  }
+
+  .explore-card p,
+  .explore-index {
+    color: hsl(var(--muted-foreground));
+  }
+
+  .explore-card p {
+    font-size: 0.9rem;
+    line-height: 1.6;
+  }
+
+  .explore-index {
+    margin-bottom: auto;
+    font-size: 0.72rem;
+    letter-spacing: 0.12em;
+  }
+</style>

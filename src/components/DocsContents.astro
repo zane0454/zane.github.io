@@ -1,0 +1,67 @@
+---
+import { type CollectionEntry } from 'astro:content'
+
+import { getBlogCollection } from 'astro-pure/server'
+import { cn } from 'astro-pure/utils'
+
+const docsCollection = (await getBlogCollection('docs')) as CollectionEntry<'docs'>[]
+const docsByCategory = docsCollection.reduce(
+  (acc: Record<string, typeof docsCollection>, doc) => {
+    const id = doc.id.split('/')[0]
+    if (!acc[id]) acc[id] = []
+    acc[id].push(doc)
+    return acc
+  },
+  {}
+)
+
+const categories = {
+  start: '开始使用',
+  writing: '内容写作',
+  reference: '资料与附件'
+}
+
+type Props = {
+  title?: boolean
+  class?: string
+}
+
+const { title = true, class: className, ...props } = Astro.props
+---
+
+<docs-toc class={cn('not-prose', className)} {...props}>
+  {title && <h2 class='font-medium text-foreground'>文档目录</h2>}
+  <ul class='mt-4 grid gap-5 sm:grid-cols-3'>
+    {
+      Object.entries(categories).map(([id, categoryTitle]) => (
+        <li class='rounded-2xl border bg-muted/35 p-5'>
+          <h3 class='text-xs uppercase tracking-widest text-muted-foreground'>{categoryTitle}</h3>
+          <ul class='mt-3 flex flex-col gap-2'>
+            {(docsByCategory[id] || [])
+              .sort((a, b) => a.data.order - b.data.order)
+              .map((doc) => (
+                <li class='docs-item rounded-lg text-foreground/80 transition-colors'>
+                  <a class='block py-1 hover:text-foreground' href={`/docs/${doc.id}`}>
+                    {doc.data.title}
+                  </a>
+                </li>
+              ))}
+          </ul>
+        </li>
+      ))
+    }
+  </ul>
+</docs-toc>
+
+<script>
+  class DocsTOC extends HTMLElement {
+    connectedCallback() {
+      const path = window.location.pathname
+      this.querySelectorAll('a').forEach((link) => {
+        if (link.getAttribute('href') === path) link.parentElement?.classList.add('docs-hl')
+      })
+    }
+  }
+
+  if (!customElements.get('docs-toc')) customElements.define('docs-toc', DocsTOC)
+</script>
