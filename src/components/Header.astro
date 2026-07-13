@@ -1,0 +1,99 @@
+---
+import { Icon } from 'astro-pure/user'
+import config from 'virtual:config'
+import { withBase } from '@/lib/paths'
+---
+
+<header-component class='group sticky top-4 z-50 mb-12 flex items-center justify-between rounded-xl border border-transparent max-md:z-30 max-sm:py-1 sm:rounded-2xl'>
+  <a class='z-30 text-xl font-medium group-[.not-top]:ms-2 sm:group-[.not-top]:ms-3' style='transition:margin-inline 0.3s' href={withBase('/')} aria-label='首页'>
+    {config.title}
+  </a>
+
+  <div class='flex items-center gap-x-2'>
+    <div id='headerExpandContent' class='end-0 start-0 top-12 grid border border-transparent group-[.not-top]:rounded-xl group-[.expanded]:opacity-100 dark:group-[.expanded.not-top]:bg-muted max-sm:absolute max-sm:opacity-0 max-sm:group-[.not-top]:border-border max-sm:group-[.expanded.not-top]:bg-background max-sm:group-[.not-top]:px-4 max-sm:group-[.not-top]:py-2 sm:grid-rows-1'>
+      <div class='flex flex-col items-center justify-center overflow-hidden sm:flex-row'>
+        {
+          config.header.menu.map((item) => (
+            <a href={item.link} class='w-full flex-none grow py-2 text-right font-medium transition-none hover:text-primary sm:w-fit sm:px-3' aria-label={item.title} data-astro-prefetch>
+              {item.title}
+            </a>
+          ))
+        }
+        <div class='flex w-full grow flex-row justify-end gap-x-3 sm:w-fit sm:gap-x-5'>
+          <a class='px-1 py-2 transition-none sm:px-2' href={withBase('/search')} title='搜索'>
+            <span class='sr-only'>搜索</span>
+            <Icon name='search' class='size-5' />
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class='z-30 flex gap-x-4 group-[.not-top]:gap-x-2' style='transition:gap 0.3s'>
+      <button id='toggleDarkMode' class='group/dark box-content size-5 rounded-md border p-1.5 transition-colors hover:bg-border sm:group-[.not-top]:rounded-xl'>
+        <span class='sr-only'>切换主题</span>
+        <Icon class='system size-5 group-hover/dark:text-primary' name='computer' />
+        <Icon class='light hidden size-5 group-hover/dark:text-primary' name='sun' />
+        <Icon class='dark hidden size-5 group-hover/dark:text-primary' name='moon' />
+      </button>
+      <button id='toggleMenu' class='rounded-md border p-1.5 transition-colors hover:bg-border sm:hidden sm:group-[.not-top]:rounded-xl'>
+        <span class='sr-only'>菜单</span>
+        <Icon class='size-5' name='menu' />
+      </button>
+    </div>
+  </div>
+</header-component>
+
+<script is:inline>
+  const themeButton = document.getElementById('toggleDarkMode')
+  if (themeButton) themeButton.dataset.theme = localStorage.getItem('theme') || 'system'
+</script>
+<script>
+  import { setTheme, showToast } from 'astro-pure/utils'
+
+  class HeaderComponent extends HTMLElement {
+    connectedCallback() {
+      let previousScrollY = window.scrollY
+      this.classList.toggle('not-top', previousScrollY > 20)
+      window.addEventListener('scroll', () => {
+        this.classList.toggle('not-top', window.scrollY > 20)
+        this.dataset.show = (window.scrollY < 350 || window.scrollY < previousScrollY).toString()
+        previousScrollY = window.scrollY
+      })
+
+      const darkModeButton = this.querySelector('#toggleDarkMode') as HTMLElement
+      darkModeButton.addEventListener('click', () => {
+        const newTheme = setTheme(undefined, true)
+        darkModeButton.dataset.theme = newTheme
+        showToast({ message: `主题已切换为 ${newTheme}` })
+      })
+      this.querySelector('#toggleMenu')?.addEventListener('click', () => this.classList.toggle('expanded'))
+    }
+  }
+
+  if (!customElements.get('header-component')) customElements.define('header-component', HeaderComponent)
+</script>
+
+<style>
+  header-component {
+    transition: padding .3s, transform .3s, margin-inline .3s, border .15s, background-color .15s;
+  }
+  header-component.not-top {
+    border-color: hsl(var(--border));
+    background-color: hsl(var(--background));
+    padding-inline: .375rem;
+    box-shadow: 0 1px 1px rgba(39, 39, 42, .04), 0 10px 24px rgba(39, 39, 42, .08);
+  }
+  header-component[data-show='false']:not(.expanded) { transform: translateY(-5rem); }
+  @media (min-width: 800px) { header-component.not-top { margin-inline: 8%; } }
+  :global(.dark) header-component.not-top { background-color: hsl(var(--muted)); }
+
+  @media (max-width: 640px) {
+    #headerExpandContent { grid-template-rows: 0fr; transition: opacity .3s, padding .3s, border-color .15s, grid-template-rows .3s; }
+    .expanded #headerExpandContent { grid-template-rows: 1fr; }
+  }
+
+  #toggleDarkMode[data-theme='dark'] .system,
+  #toggleDarkMode[data-theme='light'] .system { display: none; }
+  #toggleDarkMode[data-theme='dark'] .dark,
+  #toggleDarkMode[data-theme='light'] .light { display: block; }
+</style>

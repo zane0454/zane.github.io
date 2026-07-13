@@ -5,6 +5,7 @@ import PageLayout from '@/layouts/BaseLayout.astro'
 import { integ } from '@/site-config'
 
 import DocsContents from '@/components/DocsContents.astro'
+import { withBase } from '@/lib/paths'
 
 const meta = {
   title: '文档',
@@ -13,7 +14,7 @@ const meta = {
 ---
 
 <PageLayout {meta}>
-  <Button title='返回首页' href='/' variant='back' />
+  <Button title='返回首页' href={withBase('/')} variant='back' />
   <main class='mt-6 lg:mt-10'>
     <div id='content-header' class='animate'>
       <p class='mb-3 text-sm tracking-widest text-muted-foreground'>KNOWLEDGE BASE</p>

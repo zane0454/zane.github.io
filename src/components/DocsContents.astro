@@ -3,6 +3,7 @@ import { type CollectionEntry } from 'astro:content'
 
 import { getBlogCollection } from 'astro-pure/server'
 import { cn } from 'astro-pure/utils'
+import { withBase } from '@/lib/paths'
 
 const docsCollection = (await getBlogCollection('docs')) as CollectionEntry<'docs'>[]
 const docsByCategory = docsCollection.reduce(
@@ -41,7 +42,7 @@ const { title = true, class: className, ...props } = Astro.props
               .sort((a, b) => a.data.order - b.data.order)
               .map((doc) => (
                 <li class='docs-item rounded-lg text-foreground/80 transition-colors'>
-                  <a class='block py-1 hover:text-foreground' href={`/docs/${doc.id}`}>
+                  <a class='block py-1 hover:text-foreground' href={withBase(`/docs/${doc.id}`)}>
                     {doc.data.title}
                   </a>
                 </li>

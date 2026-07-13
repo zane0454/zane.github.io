@@ -5,6 +5,7 @@ import { Button, Icon } from 'astro-pure/user'
 import { cn } from 'astro-pure/utils'
 import PageLayout from '@/layouts/BaseLayout.astro'
 import { integ } from '@/site-config'
+import { withBase } from '@/lib/paths'
 
 interface Props {
   meta: SiteMeta
@@ -12,7 +13,7 @@ interface Props {
   back?: string
 }
 
-const { meta, highlightColor, back = '/', ...props } = Astro.props
+const { meta, highlightColor, back = withBase('/'), ...props } = Astro.props
 ---
 
 <PageLayout {meta} {highlightColor} {...props}>

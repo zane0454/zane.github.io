@@ -1,0 +1,51 @@
+---
+import type { CollectionKey, InferEntrySchema } from 'astro:content'
+
+import { Icon } from 'astro-pure/user'
+import { cn, getFormattedDate } from 'astro-pure/utils'
+import config from 'virtual:config'
+
+interface Props<T extends CollectionKey> {
+  data: InferEntrySchema<T>
+  class?: string
+}
+
+const { data: { title, publishDate }, class: className } = Astro.props
+---
+
+<div class={cn('relative flex flex-col gap-y-2 rounded-xl border px-4 py-3', className)}>
+  <Icon class='absolute end-4 top-4 size-20 opacity-10' name='copyright' />
+  <div class='flex flex-col'>
+    <div class='font-medium text-foreground'>{title}</div>
+    <div class='line-clamp-1 text-sm'>{Astro.url}</div>
+  </div>
+  <div class='flex flex-row flex-wrap gap-x-8 gap-y-1'>
+    <div class='flex gap-x-2 sm:flex-col'>
+      <span>作者</span>
+      <span class='text-sm text-foreground'>{config.author}</span>
+    </div>
+    {
+      publishDate && (
+        <div class='flex gap-x-2 sm:flex-col'>
+          <span>发布于</span>
+          <span class='text-sm text-foreground'>{getFormattedDate(publishDate, { month: 'long' })}</span>
+        </div>
+      )
+    }
+    <div class='flex gap-x-2 sm:flex-col'>
+      <span>许可协议</span>
+      <a class='text-sm text-foreground' href='https://creativecommons.org/licenses/by-nc-sa/4.0/' target='_blank'>CC BY-NC-SA 4.0</a>
+    </div>
+  </div>
+  <button id='copy-article-link' class='mt-1 flex w-fit items-center gap-1 rounded-full bg-muted px-3 py-1 text-sm text-muted-foreground transition-colors hover:text-primary'>
+    <Icon class='size-4' name='link' />复制链接
+  </button>
+</div>
+
+<script>
+  import { showToast } from 'astro-pure/utils'
+  document.getElementById('copy-article-link')?.addEventListener('click', () => {
+    navigator.clipboard.writeText(window.location.href)
+    showToast({ message: '链接已复制' })
+  })
+</script>

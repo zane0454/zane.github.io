@@ -4,6 +4,7 @@ import { Font } from 'astro:assets'
 import { prod } from 'astro-pure/server'
 import type { SiteMeta } from 'astro-pure/types'
 import config from 'virtual:config'
+import { withBase } from '@/lib/paths'
 
 type Props = SiteMeta
 
@@ -22,10 +23,10 @@ const socialImageURL = new URL(ogImage ? ogImage : config.socialCard, Astro.url)
 {/* Icons / Favicon */}
 <link rel='icon' type={config.favicon.type} href={config.favicon.href} />
 <link rel='shortcut icon' type={config.favicon.type} href={config.favicon.href} />
-<link rel='icon' type='image/png' sizes='32x32' href='/favicon/favicon-32x32.png' />
-<link rel='icon' type='image/png' sizes='16x16' href='/favicon/favicon-16x16.png' />
-<link rel='apple-touch-icon' sizes='180x180' href='/favicon/apple-touch-icon.png' />
-<link rel='manifest' href='/favicon/site.webmanifest' />
+<link rel='icon' type='image/png' sizes='32x32' href={withBase('/favicon/favicon-32x32.png')} />
+<link rel='icon' type='image/png' sizes='16x16' href={withBase('/favicon/favicon-16x16.png')} />
+<link rel='apple-touch-icon' sizes='180x180' href={withBase('/favicon/apple-touch-icon.png')} />
+<link rel='manifest' href={withBase('/favicon/site.webmanifest')} />
 
 {/* Font preloads */}
 <Font cssVariable='--font-satoshi' preload={[{ subset: 'latin', style: 'normal' }]} />
@@ -74,14 +75,14 @@ const socialImageURL = new URL(ogImage ? ogImage : config.socialCard, Astro.url)
 <meta content={socialImageURL} property='twitter:image' />
 
 {/* Sitemap */}
-<link href='/sitemap-index.xml' rel='sitemap' />
+<link href={withBase('/sitemap-index.xml')} rel='sitemap' />
 
 {/* RSS auto-discovery */}
 <link
   rel='alternate'
   type='application/rss+xml'
   title={config.title}
-  href={`${Astro.site}rss.xml`}
+  href={new URL(withBase('/rss.xml'), Astro.site)}
 />
 
 <meta content={Astro.generator} name='generator' />

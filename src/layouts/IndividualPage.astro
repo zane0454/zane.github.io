@@ -6,6 +6,7 @@ import { Button, Icon } from 'astro-pure/user'
 import { cn } from 'astro-pure/utils'
 import config from 'virtual:config'
 import PageLayout from '@/layouts/BaseLayout.astro'
+import { withBase } from '@/lib/paths'
 
 type Props = MarkdownLayoutProps<{
   title: string
@@ -23,7 +24,7 @@ const socialImage = heroImage?.src ?? config.socialCard
 ---
 
 <PageLayout meta={{ title, description, ogImage: socialImage }}>
-  <Button title='Back' href={back ?? '/'} variant='back' />
+  <Button title='Back' href={back ?? withBase('/')} variant='back' />
   <main class='mt-6 items-start gap-x-10 md:flex lg:mt-10'>
     {
       !!headings.length && (

@@ -6,10 +6,14 @@ import type { CollectionEntry } from 'astro:content'
 import 'katex/dist/katex.min.css'
 
 import { MediumZoom } from 'astro-pure/advanced'
-import { ArticleBottom, Copyright, Hero, TOC } from 'astro-pure/components/pages'
+import { TOC } from 'astro-pure/components/pages'
 import config from 'virtual:config'
+import ArticleBottom from '@/components/ArticleBottom.astro'
+import ArticleCopyright from '@/components/ArticleCopyright.astro'
+import ArticleHero from '@/components/ArticleHero.astro'
 import PageLayout from '@/layouts/ContentLayout.astro'
 import { Comment, PageInfo } from '@/components/waline'
+import { withBase } from '@/lib/paths'
 
 interface Props {
   post: CollectionEntry<'blog'>
@@ -47,21 +51,21 @@ const primaryColor = data.heroImage?.color ?? 'hsl(var(--primary) / var(--un-tex
 <PageLayout
   meta={{ articleDate, description, ogImage: socialImage, title }}
   highlightColor={primaryColor}
-  back='/blog'
+  back={withBase('/blog')}
 >
   {!!headings.length && <TOC {headings} slot='sidebar' />}
 
-  <Hero {data} {remarkPluginFrontmatter} slot='header'>
+  <ArticleHero {data} {remarkPluginFrontmatter} slot='header'>
     <Fragment slot='description'>
       {!isDraft && enableComment && <PageInfo comment class='mt-1' />}
     </Fragment>
-  </Hero>
+  </ArticleHero>
 
   <slot />
 
   <Fragment slot='bottom'>
     {/* Copyright */}
-    <Copyright {data} />
+    <ArticleCopyright {data} />
     {/* Article recommend */}
     <ArticleBottom collections={posts} {id} class='mt-3 sm:mt-6' />
     { /* Comment */

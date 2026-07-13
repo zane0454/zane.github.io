@@ -1,11 +1,12 @@
 import type { Config, IntegrationUserConfig, ThemeUserConfig } from 'astro-pure/types'
+import { withBase } from './lib/paths'
 
 export const theme: ThemeUserConfig = {
   title: 'Zane 的个人博客',
   author: 'Zane',
   description: '记录学习、思考与生活，也分享值得长期保存的内容。',
-  favicon: '/favicon/favicon-32x32.png',
-  socialCard: '/images/social-card.png',
+  favicon: withBase('/favicon/favicon-32x32.png'),
+  socialCard: withBase('/images/social-card.png'),
   locale: {
     lang: 'zh-CN',
     attrs: 'zh_CN',
@@ -26,10 +27,10 @@ export const theme: ThemeUserConfig = {
   customCss: [],
   header: {
     menu: [
-      { title: '文章', link: '/blog' },
-      { title: '文档', link: '/docs' },
-      { title: '项目', link: '/projects' },
-      { title: '关于', link: '/about' }
+      { title: '文章', link: withBase('/blog') },
+      { title: '文档', link: withBase('/docs') },
+      { title: '项目', link: withBase('/projects') },
+      { title: '关于', link: withBase('/about') }
     ]
   },
   footer: {
@@ -38,7 +39,7 @@ export const theme: ThemeUserConfig = {
     credits: true,
     social: [
       { icon: 'github', label: 'GitHub', href: 'https://github.com/zane0454' },
-      { icon: 'rss', label: 'RSS', href: '/rss.xml' }
+      { icon: 'rss', label: 'RSS', href: withBase('/rss.xml') }
     ]
   },
   content: {

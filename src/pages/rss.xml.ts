@@ -11,6 +11,7 @@ import { visit } from 'unist-util-visit'
 
 import { getBlogCollection, sortMDByDate } from 'astro-pure/server'
 import config from 'virtual:config'
+import { withBase } from '@/lib/paths'
 
 // Get dynamic import of images as a map collection
 const imagesGlob = import.meta.glob<{ default: ImageMetadata }>(
@@ -27,13 +28,13 @@ const renderContent = async (post: CollectionEntry<'blog'>, site: URL) => {
       const promises: Promise<void>[] = []
       visit(tree, 'image', (node) => {
         if (node.url.startsWith('/images')) {
-          node.url = `${site}${node.url.replace('/', '')}`
+          node.url = new URL(withBase(node.url), site).href
         } else {
           const imagePathPrefix = `/src/content/blog/${post.id}/${node.url.replace('./', '')}`
           const promise = imagesGlob[imagePathPrefix]?.().then(async (res) => {
             const imagePath = res?.default
             if (imagePath) {
-              node.url = `${site}${(await getImage({ src: imagePath })).src.replace('/', '')}`
+              node.url = new URL((await getImage({ src: imagePath })).src, site).href
             }
           })
           if (promise) promises.push(promise)
@@ -61,18 +62,16 @@ const GET = async (context: AstroGlobal) => {
     // Basic configs
     trailingSlash: false,
     xmlns: { h: 'http://www.w3.org/TR/html4/' },
-    stylesheet: '/scripts/pretty-feed-v3.xsl',
+    stylesheet: withBase('/scripts/pretty-feed-v3.xsl'),
 
     // Contents
     title: config.title,
     description: config.description,
-    site: import.meta.env.SITE,
+    site: new URL(withBase('/'), siteUrl).href,
     items: await Promise.all(
       allPostsByDate.map(async (post) => ({
         pubDate: post.data.publishDate,
-        link: `/blog/${post.id}`,
-        customData: `<h:img src="${typeof post.data.heroImage?.src === 'string' ? post.data.heroImage?.src : post.data.heroImage?.src.src}" />
-          <enclosure url="${typeof post.data.heroImage?.src === 'string' ? post.data.heroImage?.src : post.data.heroImage?.src.src}" />`,
+        link: withBase(`/blog/${post.id}`),
         content: await renderContent(post, siteUrl),
         ...post.data
       }))

@@ -1,5 +1,6 @@
 import { h } from 'hastscript'
 import type { ShikiTransformer } from 'shiki'
+import { withBase } from '../lib/paths'
 
 function parseMetaString(str = '') {
   return Object.fromEntries(
@@ -105,12 +106,12 @@ export const addCopyButton = (timeout?: number): ShikiTransformer => {
         [
           h('div', { class: 'ready' }, [
             h('svg', { class: 'size-5' }, [
-              h('use', { href: '/icons/code.svg#mingcute-clipboard-line' })
+              h('use', { href: withBase('/icons/code.svg#mingcute-clipboard-line') })
             ])
           ]),
           h('div', { class: 'success hidden' }, [
             h('svg', { class: 'size-5' }, [
-              h('use', { href: '/icons/code.svg#mingcute-file-check-line' })
+              h('use', { href: withBase('/icons/code.svg#mingcute-file-check-line') })
             ])
           ])
         ]
@@ -140,7 +141,7 @@ export const addCollapse = (displayLineCount?: number): ShikiTransformer => {
         },
         [
           h('svg', { class: 'size-5' }, [
-            h('use', { href: '/icons/code.svg#mingcute-arrow-down-line' })
+            h('use', { href: withBase('/icons/code.svg#mingcute-arrow-down-line') })
           ]),
           h('span', { class: 'desc' }, ' code')
         ]

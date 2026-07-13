@@ -17,8 +17,8 @@ order: 1
 需要提供下载的附件可以放在 `public/files/` 中：
 
 ```markdown
-[下载 PDF](/files/example.pdf)
-[下载 Word 文档](/files/example.docx)
+[下载 PDF](/zane.github.io/files/example.pdf)
+[下载 Word 文档](/zane.github.io/files/example.docx)
 ```
 
 文件名建议使用英文、数字和短横线，避免链接在不同环境中出现编码问题。

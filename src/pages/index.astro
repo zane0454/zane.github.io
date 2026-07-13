@@ -1,12 +1,13 @@
 ---
 import { Image } from 'astro:assets'
 
-import { PostPreview } from 'astro-pure/components/pages'
 import { getBlogCollection, sortMDByDate } from 'astro-pure/server'
 import { Button, Icon, Label } from 'astro-pure/user'
+import PostPreview from '@/components/PostPreview.astro'
 import PageLayout from '@/layouts/BaseLayout.astro'
 import Section from '@/components/home/Section.astro'
 import config from '@/site-config'
+import { withBase } from '@/lib/paths'
 
 const posts = sortMDByDate(await getBlogCollection()).slice(0, 6)
 const imagePath = config.logo.src
@@ -49,8 +50,8 @@ if (!images[imagePath]) throw new Error(`找不到头像资源：${imagePath}`)
       </div>
 
       <div class='flex flex-wrap justify-center gap-3'>
-        <Button title='开始阅读' href='/blog' variant='ahead' />
-        <Button title='浏览文档' href='/docs' />
+        <Button title='开始阅读' href={withBase('/blog')} variant='ahead' />
+        <Button title='浏览文档' href={withBase('/docs')} />
       </div>
     </section>
 
@@ -60,7 +61,7 @@ if (!images[imagePath]) throw new Error(`找不到头像资源：${imagePath}`)
           这里是 Zane 的个人空间。文章以清晰、诚实和可复用为原则，既有完整教程，也有简短记录。
           希望每次整理都能让复杂的事情变得更容易理解。
         </p>
-        <Button title='了解更多' class='w-fit self-end' href='/about' variant='ahead' />
+        <Button title='了解更多' class='w-fit self-end' href={withBase('/about')} variant='ahead' />
       </Section>
 
       {
@@ -73,24 +74,24 @@ if (!images[imagePath]) throw new Error(`找不到头像资源：${imagePath}`)
                 </li>
               ))}
             </ul>
-            <Button title='查看全部文章' class='w-fit self-end' href='/blog' variant='ahead' />
+            <Button title='查看全部文章' class='w-fit self-end' href={withBase('/blog')} variant='ahead' />
           </Section>
         )
       }
 
       <Section title='探索'>
         <div class='explore-grid grid grid-cols-1 gap-3 sm:grid-cols-3'>
-          <a class='explore-card' href='/blog'>
+          <a class='explore-card' href={withBase('/blog')}>
             <span class='explore-index'>01</span>
             <h3>文章</h3>
             <p>学习记录、经验总结与长篇思考。</p>
           </a>
-          <a class='explore-card' href='/docs'>
+          <a class='explore-card' href={withBase('/docs')}>
             <span class='explore-index'>02</span>
             <h3>文档</h3>
             <p>按主题整理的入门资料与使用说明。</p>
           </a>
-          <a class='explore-card' href='/projects'>
+          <a class='explore-card' href={withBase('/projects')}>
             <span class='explore-index'>03</span>
             <h3>项目</h3>
             <p>正在做、做过以及准备继续完善的事情。</p>

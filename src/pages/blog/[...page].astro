@@ -2,11 +2,13 @@
 import type { GetStaticPaths, Page } from 'astro'
 import type { CollectionEntry } from 'astro:content'
 
-import { Paginator, PostPreview } from 'astro-pure/components/pages'
+import { Paginator } from 'astro-pure/components/pages'
 import { getBlogCollection, getUniqueTagsWithCount, sortMDByDate } from 'astro-pure/server'
 import { Button, Icon } from 'astro-pure/user'
+import PostPreview from '@/components/PostPreview.astro'
 import PageLayout from '@/layouts/BaseLayout.astro'
 import config from '@/site-config'
+import { withBase } from '@/lib/paths'
 
 export const prerender = true
 
@@ -38,7 +40,7 @@ const paginationProps = {
 ---
 
 <PageLayout {meta}>
-  <Button title='返回首页' href='/' variant='back' />
+  <Button title='返回首页' href={withBase('/')} variant='back' />
   <main class='mt-6 lg:mt-10'>
     <div id='content-header' class='animate'>
       <p class='mb-3 text-sm tracking-widest text-muted-foreground'>WRITING & NOTES</p>
@@ -57,7 +59,7 @@ const paginationProps = {
               <span class='text-muted-foreground'>
                 第 {page.currentPage} 页 · 当前显示 {page.data.length} / {collectionsCount} 篇
               </span>
-              <a aria-label='按年份查看全部文章' href='/archives' data-astro-prefetch>
+              <a aria-label='按年份查看全部文章' href={withBase('/archives')} data-astro-prefetch>
                 查看归档 →
               </a>
             </div>
@@ -75,11 +77,11 @@ const paginationProps = {
               </h2>
               <ul class='flex flex-wrap gap-2'>
                 {uniqueTags.slice(0, 50).map((tag) => (
-                  <li><Button title={tag} href={`/tags/${tag}`} variant='pill' /></li>
+                  <li><Button title={tag} href={withBase(`/tags/${tag}`)} variant='pill' /></li>
                 ))}
               </ul>
               <span class='mt-4 block sm:text-end'>
-                <a aria-label='查看全部标签' href='/tags' data-astro-prefetch>查看全部 →</a>
+                <a aria-label='查看全部标签' href={withBase('/tags')} data-astro-prefetch>查看全部 →</a>
               </span>
             </aside>
           )}
